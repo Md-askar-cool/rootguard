@@ -397,58 +397,7 @@
             color: var(--text-main);
         }
 
-        /* Sliders */
-        .slider-group {
-            margin-bottom: 24px;
-        }
-        
-        .slider-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-        
-        .slider-value-display {
-            color: var(--accent-green-hover);
-            font-weight: 600;
-        }
-
-        .slider-range-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: var(--accent-green);
-            cursor: pointer;
-            margin-top: -8px;
-            box-shadow: 0 2px 6px rgba(52, 211, 153, 0.4);
-        }
-        
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: var(--border-color);
-            border-radius: 2px;
-        }
-
-        /* Grid for Specs */
+        /* Grid for Specs / Live Data */
         .specs-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -479,6 +428,7 @@
         .spec-title {
             font-size: 13px;
             font-weight: 600;
+            color: var(--text-muted);
         }
         .spec-val {
             font-size: 12px;
@@ -625,79 +575,51 @@
         <div id="view-diagnosis" class="view-section">
             <div class="status-header">
                 <div class="status-dot"></div>
-                Live Diagnosis Console
+                RootGuard AI · Smart Diagnosis
             </div>
             
             <div style="margin-bottom: 24px;">
-                <h1 class="page-title">Diagnosis Simulator</h1>
-                <p class="page-subtitle">Adjust parameters to see real-time health predictions.</p>
+                <h1 class="page-title">Live Diagnosis</h1>
+                <p class="page-subtitle">Fetch real-time sensor data from the RootGuard device and generate a comprehensive plant health report.</p>
             </div>
 
-            <!-- Sliders -->
-            <div class="slider-group">
-                <div class="slider-header">
-                    <span>Stem Bio-Impedance</span>
-                    <div><span class="slider-value-display" id="val-imp">500</span> Ω</div>
-                </div>
-                <input type="range" id="slider-imp" min="200" max="900" value="500" oninput="updateSlider('imp')">
-                <div class="slider-range-labels"><span>200</span><span>900</span></div>
-            </div>
+            <button class="btn" id="btn-fetch" onclick="fetchDeviceReadings()" style="background-color: var(--text-main); margin-bottom: 24px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                Sync with RootGuard Device
+            </button>
 
-            <div class="slider-group">
-                <div class="slider-header">
-                    <span>Phase Angle</span>
-                    <div><span class="slider-value-display" id="val-phase">6</span> &deg;</div>
+            <!-- Live Readings Grid -->
+            <div id="live-readings" class="hidden">
+                <h3 style="font-size: 16px; margin-bottom: 16px;">Latest Device Readings</h3>
+                <div class="specs-grid" style="margin-bottom: 24px;">
+                    <div class="spec-card" style="padding: 14px;">
+                        <div class="spec-title">Bio-Impedance</div>
+                        <div class="spec-val" style="font-size: 18px; color: var(--text-main); font-weight: 600;"><span id="read-imp">--</span> Ω</div>
+                    </div>
+                    <div class="spec-card" style="padding: 14px;">
+                        <div class="spec-title">Phase Angle</div>
+                        <div class="spec-val" style="font-size: 18px; color: var(--text-main); font-weight: 600;"><span id="read-phase">--</span>&deg;</div>
+                    </div>
+                    <div class="spec-card" style="padding: 14px;">
+                        <div class="spec-title">Soil Moisture</div>
+                        <div class="spec-val" style="font-size: 18px; color: var(--text-main); font-weight: 600;"><span id="read-moisture">--</span>%</div>
+                    </div>
+                    <div class="spec-card" style="padding: 14px;">
+                        <div class="spec-title">Soil pH</div>
+                        <div class="spec-val" style="font-size: 18px; color: var(--text-main); font-weight: 600;"><span id="read-ph">--</span></div>
+                    </div>
+                    <div class="spec-card" style="padding: 14px;">
+                        <div class="spec-title">Electrical Cond.</div>
+                        <div class="spec-val" style="font-size: 18px; color: var(--text-main); font-weight: 600;"><span id="read-ec">--</span> dS/m</div>
+                    </div>
+                    <div class="spec-card" style="padding: 14px;">
+                        <div class="spec-title">Temperature</div>
+                        <div class="spec-val" style="font-size: 18px; color: var(--text-main); font-weight: 600;"><span id="read-temp">--</span>&deg;C</div>
+                    </div>
                 </div>
-                <input type="range" id="slider-phase" min="0" max="15" value="6" oninput="updateSlider('phase')">
-                <div class="slider-range-labels"><span>0&deg;</span><span>15&deg;</span></div>
-            </div>
 
-            <div class="slider-group">
-                <div class="slider-header">
-                    <span>Soil Moisture</span>
-                    <div><span class="slider-value-display" id="val-moisture">50</span> %</div>
-                </div>
-                <input type="range" id="slider-moisture" min="0" max="100" value="50" oninput="updateSlider('moisture')">
-                <div class="slider-range-labels"><span>0%</span><span>100%</span></div>
+                <button class="btn" id="btn-run-diag" onclick="runDeviceDiagnosis()">Generate AI Diagnosis</button>
             </div>
-            
-            <div class="slider-group">
-                <div class="slider-header">
-                    <span>Soil pH</span>
-                    <div><span class="slider-value-display" id="val-ph">6.5</span></div>
-                </div>
-                <input type="range" id="slider-ph" min="30" max="100" value="65" oninput="updateSlider('ph')">
-                <div class="slider-range-labels"><span>3.0</span><span>10.0</span></div>
-            </div>
-
-            <div class="slider-group">
-                <div class="slider-header">
-                    <span>Electrical Conductivity</span>
-                    <div><span class="slider-value-display" id="val-ec">1.4</span> dS/m</div>
-                </div>
-                <input type="range" id="slider-ec" min="0" max="40" value="14" oninput="updateSlider('ec')">
-                <div class="slider-range-labels"><span>0</span><span>4</span></div>
-            </div>
-
-            <div class="slider-group">
-                <div class="slider-header">
-                    <span>Ambient Temperature</span>
-                    <div><span class="slider-value-display" id="val-temp">27</span> &deg;C</div>
-                </div>
-                <input type="range" id="slider-temp" min="15" max="40" value="27" oninput="updateSlider('temp')">
-                <div class="slider-range-labels"><span>15&deg;C</span><span>40&deg;C</span></div>
-            </div>
-
-            <div class="slider-group">
-                <div class="slider-header">
-                    <span>Humidity</span>
-                    <div><span class="slider-value-display" id="val-humidity">68</span> %</div>
-                </div>
-                <input type="range" id="slider-humidity" min="20" max="100" value="68" oninput="updateSlider('humidity')">
-                <div class="slider-range-labels"><span>20%</span><span>100%</span></div>
-            </div>
-
-            <button class="btn" onclick="runDiagnosis()">Run Diagnosis</button>
 
             <!-- Diagnosis Results -->
             <div class="results-section" id="diag-results" style="margin-top: 32px;">
@@ -715,21 +637,17 @@
                 </div>
 
                 <div class="metric-row">
-                    <span>Root Stress</span>
+                    <span>Root Stress Level</span>
                     <span class="metric-value" id="diag-stress">--</span>
                 </div>
                 <div class="metric-row">
-                    <span>Panama Risk</span>
+                    <span>Panama Disease Risk</span>
                     <span class="metric-value" id="diag-risk">--</span>
                 </div>
-                <div class="metric-row">
-                    <span>Primary Signal</span>
-                    <span class="metric-value">Stem Bio-Impedance</span>
-                </div>
 
-                <div class="recommendation-card">
-                    <div class="rec-title">Recommendation</div>
-                    <div class="rec-text" id="diag-rec">--</div>
+                <div class="recommendation-card" style="background-color: #F0FDF4; border: 1px solid #BBF7D0;">
+                    <div class="rec-title" style="color: #166534;">Comprehensive Diagnosis</div>
+                    <div class="rec-text" id="diag-rec" style="line-height: 1.6; color: #14532D;">--</div>
                 </div>
             </div>
 
@@ -867,73 +785,129 @@
         }, 1500);
     }
 
-    // Diagnosis Simulator Logic
-    function updateSlider(id) {
-        let val = document.getElementById(`slider-${id}`).value;
-        if(id === 'ph' || id === 'ec') {
-            val = (val / 10).toFixed(1);
-        }
-        document.getElementById(`val-${id}`).innerText = val;
+    // Live Diagnosis Logic
+    let currentReadings = {};
+
+    function fetchDeviceReadings() {
+        const btn = document.getElementById('btn-fetch');
+        const iconSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>`;
+        
+        btn.innerHTML = 'Syncing Device...';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            btn.innerHTML = 'Device Synced';
+            btn.style.backgroundColor = 'var(--accent-green)';
+            
+            // Generate mock device data
+            currentReadings = {
+                imp: Math.floor(Math.random() * 150) + 400, // 400-550 ohms
+                phase: (Math.random() * 2 + 5).toFixed(1), // 5.0-7.0 deg
+                moisture: Math.floor(Math.random() * 40) + 30, // 30-70%
+                ph: (Math.random() * 1.0 + 6.0).toFixed(1), // 6.0-7.0
+                ec: (Math.random() * 1.5 + 1.0).toFixed(1), // 1.0-2.5
+                temp: Math.floor(Math.random() * 10) + 22, // 22-32 C
+            };
+            
+            document.getElementById('read-imp').innerText = currentReadings.imp;
+            document.getElementById('read-phase').innerText = currentReadings.phase;
+            document.getElementById('read-moisture').innerText = currentReadings.moisture;
+            document.getElementById('read-ph').innerText = currentReadings.ph;
+            document.getElementById('read-ec').innerText = currentReadings.ec;
+            document.getElementById('read-temp').innerText = currentReadings.temp;
+            
+            document.getElementById('live-readings').classList.remove('hidden');
+            document.getElementById('diag-results').style.display = 'none'; // reset previous run
+            
+            setTimeout(() => {
+                btn.innerHTML = iconSVG + ' Resync Device';
+                btn.style.backgroundColor = 'var(--text-main)';
+                btn.disabled = false;
+            }, 1500);
+            
+        }, 1200);
     }
 
-    function runDiagnosis() {
-        const imp = parseInt(document.getElementById('slider-imp').value);
-        const phase = parseInt(document.getElementById('slider-phase').value);
-        const moisture = parseInt(document.getElementById('slider-moisture').value);
-        const ph = parseInt(document.getElementById('slider-ph').value) / 10;
-
-        let score = 100;
-        let stress = 'Low';
-        let risk = 2;
-        let rec = 'Readings are within healthy range. Continue routine monitoring.';
-
-        // Simple mock algorithm
-        if(imp < 350 || imp > 750) score -= 20;
-        if(phase < 3) score -= 15;
-        if(moisture < 30 || moisture > 80) score -= 10;
-        if(ph < 5.5 || ph > 7.5) score -= 10;
-
-        if (score < 65) {
-            stress = 'High';
-            risk = 80 - score + 10; 
-            rec = 'Bio-electrical signal shows severe stress. High probability of root pathogen or severe abiotic stress. Immediate intervention required.';
-            document.getElementById('diag-stress').className = 'metric-value warning';
-            document.getElementById('diag-risk').className = 'metric-value warning';
-        } else if (score < 85) {
-            stress = 'Medium';
-            risk = 100 - score - 5;
-            rec = 'Bio-electrical signal shows early stress — this often precedes visible symptoms. Schedule a closer inspection of the root zone and reduce mechanical stress on the plant.';
-            document.getElementById('diag-stress').className = 'metric-value warning';
-            document.getElementById('diag-risk').className = 'metric-value warning';
-        } else {
-            document.getElementById('diag-stress').className = 'metric-value';
-            document.getElementById('diag-risk').className = 'metric-value';
-        }
-
-        document.getElementById('diag-results').style.display = 'block';
-        document.getElementById('diag-score').innerText = score;
-        document.getElementById('diag-stress').innerText = stress;
-        document.getElementById('diag-risk').innerText = risk + '%';
-        document.getElementById('diag-rec').innerText = rec;
-
-        // reset and animate
-        const circle = document.getElementById('diag-circle');
-        circle.style.transition = 'none';
-        circle.style.strokeDashoffset = 226;
+    function runDeviceDiagnosis() {
+        const btn = document.getElementById('btn-run-diag');
+        btn.innerText = 'Analyzing Data...';
+        btn.disabled = true;
         
-        // update color based on score
-        if (score < 65) {
-            circle.style.stroke = '#EF4444'; // Red
-        } else if (score < 85) {
-            circle.style.stroke = '#F59E0B'; // Orange
-        } else {
-            circle.style.stroke = 'var(--accent-green)';
-        }
-
         setTimeout(() => {
-            circle.style.transition = 'stroke-dashoffset 1s ease-out';
-            circle.style.strokeDashoffset = 226 - (226 * score / 100);
-        }, 50);
+            btn.innerText = 'Generate AI Diagnosis';
+            btn.disabled = false;
+            
+            const { imp, phase, moisture, ph, ec, temp } = currentReadings;
+            
+            let score = 100;
+            let stress = 'Low';
+            let risk = 2;
+            
+            // Mock diagnostic algorithm evaluating the readings
+            if(imp < 350 || imp > 750) score -= 20;
+            if(phase < 5.5) score -= 15;
+            if(moisture < 55) score -= (55 - moisture); 
+            if(ph < 5.5 || ph > 7.5) score -= 10;
+            
+            if (score < 65) {
+                stress = 'High';
+                risk = 80 - score + 10; 
+                document.getElementById('diag-stress').className = 'metric-value warning';
+                document.getElementById('diag-risk').className = 'metric-value warning';
+            } else if (score < 85) {
+                stress = 'Medium';
+                risk = 100 - score - 5;
+                document.getElementById('diag-stress').className = 'metric-value warning';
+                document.getElementById('diag-risk').className = 'metric-value warning';
+            } else {
+                document.getElementById('diag-stress').className = 'metric-value';
+                document.getElementById('diag-risk').className = 'metric-value';
+            }
+            
+            // Generate detailed descriptive recommendation
+            const optimalMoisture = 65;
+            let moistureDeficit = optimalMoisture - moisture; 
+            
+            let rec = `The diagnosis of the plant indicates a health score of ${score}%. `;
+            
+            if (moistureDeficit > 0) {
+                const mlRequired = moistureDeficit * 25; // rough mock conversion for volume
+                rec += `<br><br><b>Moisture Requirement:</b> The soil is currently at ${moisture}% moisture, which is below the optimal level of ${optimalMoisture}%. The plant wants an additional ${moistureDeficit}% moisture. Please increase irrigation by approximately ${mlRequired}ml to reach the ideal hydration level. `;
+            } else {
+                rec += `<br><br><b>Moisture Status:</b> The soil moisture is optimal at ${moisture}%. No watering is required right now. `;
+            }
+            
+            rec += `<br><br><b>Bio-Electrical Status:</b> Stem bio-impedance is stable at ${imp}Ω with a phase angle of ${phase}&deg;, indicating ${stress.toLowerCase()} structural root stress. The current soil pH of ${ph} and EC of ${ec} dS/m are successfully supporting healthy nutrient uptake.`;
+            
+            if (risk > 15) {
+                rec += `<br><br><b>Warning:</b> Due to current environmental conditions, there is an elevated Panama disease risk of ${risk}%. Keep monitoring closely.`;
+            }
+            
+            document.getElementById('diag-results').style.display = 'block';
+            document.getElementById('diag-score').innerText = score;
+            document.getElementById('diag-stress').innerText = stress;
+            document.getElementById('diag-risk').innerText = Math.round(risk) + '%';
+            document.getElementById('diag-rec').innerHTML = rec;
+
+            // Animate circle progress
+            const circle = document.getElementById('diag-circle');
+            circle.style.transition = 'none';
+            circle.style.strokeDashoffset = 226;
+            
+            if (score < 65) {
+                circle.style.stroke = '#EF4444'; 
+            } else if (score < 85) {
+                circle.style.stroke = '#F59E0B'; 
+            } else {
+                circle.style.stroke = 'var(--accent-green)';
+            }
+
+            setTimeout(() => {
+                circle.style.transition = 'stroke-dashoffset 1s ease-out';
+                circle.style.strokeDashoffset = 226 - (226 * score / 100);
+            }, 50);
+            
+        }, 1000);
     }
 </script>
 
